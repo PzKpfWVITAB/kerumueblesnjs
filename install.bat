@@ -8,7 +8,7 @@
 
 npm init --y
 
-npm install express mysql express-myconnection morgan ejs
+npm install express mysql2 express-myconnection morgan ejs
 
 npm install nodemon
 
