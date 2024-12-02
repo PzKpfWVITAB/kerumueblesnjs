@@ -7,7 +7,7 @@ const myConnection = require('express-myconnection')
 const app = express();
 
 // importar rutas
-const categoriasRoutes = require('./routes/categorias.js');
+const clientesRoutes = require('./routes/clientes.js');
 
 // Settings
 app.set('port', process.env.PORT ||5000);
@@ -26,7 +26,7 @@ app.use (myConnection(mysql, {
 
 
 // routes
-app.use('/',categoriasRoutes);
+app.use('/',clientesRoutes);
 
 
 //static files
