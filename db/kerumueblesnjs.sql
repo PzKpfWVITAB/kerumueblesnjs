@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`ARTICULO` (
   `descripción` VARCHAR(45) NULL,
   `tipo` VARCHAR(20) NULL,
   `precio` FLOAT NULL,
+  `existencia` INT NULL,
   `CATEGORIA_id_categoria` INT NOT NULL,
   PRIMARY KEY (`id_articulo`, `CATEGORIA_id_categoria`),
   INDEX `fk_ARTICULO_CATEGORIA1_idx` (`CATEGORIA_id_categoria` ASC) VISIBLE,
