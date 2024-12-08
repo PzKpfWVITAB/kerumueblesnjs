@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`ARTICULO` (
   `descripción` VARCHAR(45) NULL,
   `tipo` VARCHAR(20) NULL,
   `precio` FLOAT NULL,
-  `existencia` INT NULL,
   `CATEGORIA_id_categoria` INT NOT NULL,
+  `existencia` INT NULL,
   PRIMARY KEY (`id_articulo`, `CATEGORIA_id_categoria`),
   INDEX `fk_ARTICULO_CATEGORIA1_idx` (`CATEGORIA_id_categoria` ASC) VISIBLE,
   CONSTRAINT `fk_ARTICULO_CATEGORIA1`
@@ -55,7 +55,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `kerumueblesnjs`.`CLIENTE` ;
 
 CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`CLIENTE` (
-  `id_cliente` INT NOT NULL,
+  `id_cliente` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(50) NULL,
   `correo` VARCHAR(45) NULL,
   `contraseña` VARCHAR(100) NULL,
@@ -115,17 +115,17 @@ DROP TABLE IF EXISTS `kerumueblesnjs`.`desglose_cliente_pedido` ;
 
 CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`desglose_cliente_pedido` (
   `PEDIDO_id` INT NOT NULL,
-  `CLIENTE_id` INT NOT NULL,
-  PRIMARY KEY (`PEDIDO_id`, `CLIENTE_id`),
-  INDEX `fk_PEDIDO_has_CLIENTE_CLIENTE1_idx` (`CLIENTE_id` ASC) VISIBLE,
+  `CLIENTE_id_cliente` INT NOT NULL,
+  PRIMARY KEY (`PEDIDO_id`),
   INDEX `fk_PEDIDO_has_CLIENTE_PEDIDO1_idx` (`PEDIDO_id` ASC) VISIBLE,
+  INDEX `fk_desglose_cliente_pedido_CLIENTE1_idx` (`CLIENTE_id_cliente` ASC) VISIBLE,
   CONSTRAINT `fk_PEDIDO_has_CLIENTE_PEDIDO1`
     FOREIGN KEY (`PEDIDO_id`)
     REFERENCES `kerumueblesnjs`.`PEDIDO` (`id_pedido`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_PEDIDO_has_CLIENTE_CLIENTE1`
-    FOREIGN KEY (`CLIENTE_id`)
+  CONSTRAINT `fk_desglose_cliente_pedido_CLIENTE1`
+    FOREIGN KEY (`CLIENTE_id_cliente`)
     REFERENCES `kerumueblesnjs`.`CLIENTE` (`id_cliente`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -139,11 +139,11 @@ DROP TABLE IF EXISTS `kerumueblesnjs`.`CARRITO` ;
 
 CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`CARRITO` (
   `id_carrito` INT NOT NULL,
-  `CLIENTE_id` INT NOT NULL,
+  `CLIENTE_id_cliente` INT NOT NULL,
   PRIMARY KEY (`id_carrito`),
-  INDEX `fk_CARRITO_CLIENTE1_idx` (`CLIENTE_id` ASC) VISIBLE,
+  INDEX `fk_CARRITO_CLIENTE1_idx` (`CLIENTE_id_cliente` ASC) VISIBLE,
   CONSTRAINT `fk_CARRITO_CLIENTE1`
-    FOREIGN KEY (`CLIENTE_id`)
+    FOREIGN KEY (`CLIENTE_id_cliente`)
     REFERENCES `kerumueblesnjs`.`CLIENTE` (`id_cliente`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

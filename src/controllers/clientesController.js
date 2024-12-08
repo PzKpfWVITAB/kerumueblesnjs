@@ -14,12 +14,25 @@ controller.list = (req, res) => {
     });
 };
 
-controller.delete = (req, res) => {
-    res.send('eliminamos una cliente');
+controller.save = (req, res) => {
+    const { nombre, correo, contraseña, direccion } = req.body; // Extraer datos del formulario
+    const nuevoCliente = { nombre, correo, contraseña, direccion };
+    console.log(nuevoCliente);
+    req.getConnection((err, conn) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        conn.query('INSERT INTO cliente SET ?', [nuevoCliente], (err, result) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            res.redirect('/cltsview'); // Redirigir al listado después de guardar
+        });
+    });
 };
 
-controller.save = (req, res) => {
-    res.send('agregamos un cliente');
+controller.delete = (req, res) => {
+    res.send('eliminamos una cliente');
 };
 
 module.exports = controller;

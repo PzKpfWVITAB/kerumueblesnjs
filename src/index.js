@@ -5,6 +5,7 @@ const mysql =require('mysql2')
 const myConnection = require('express-myconnection')
 
 const app = express();
+app.use(express.urlencoded({ extended: false }));
 
 // importar rutas
 const clientesRoutes = require('./routes/clientes.js');
