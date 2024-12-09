@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes</title>
     <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Para manejar eventos -->
 </head>
 
 <body>
@@ -26,34 +27,35 @@
                         <tbody>
                             <% if (data.length> 0) { %>
                                 <% data.forEach(cliente=> { %>
-                                    <tr>
+                                    <tr id="cliente-<%= cliente.id_cliente %>">
                                         <td>
                                             <%= cliente.id_cliente %>
                                         </td>
-                                        <td>
+                                        <td class="nombre">
                                             <%= cliente.nombre %>
                                         </td>
-                                        <td>
+                                        <td class="correo">
                                             <%= cliente.correo %>
                                         </td>
-                                        <td>
+                                        <td class="direccion">
                                             <%= cliente.direccion %>
                                         </td>
                                         <td>
-                                            <button href="/cltedit<%= cliente.id %>" type="button" class="btn btn-outline-warning">Editar</button>
-                                            <a href="/cltdelete/<%= cliente.id_cliente %>" class="btn btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?')">Eliminar</a>
-
+                                            <button class="btn btn-outline-warning editar-btn"
+                                                data-id="<%= cliente.id_cliente %>">Editar</button>
+                                            <a href="/cltdelete/<%= cliente.id_cliente %>"
+                                                class="btn btn-outline-danger"
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?')">Eliminar</a>
                                         </td>
                                     </tr>
                                     <% }); %>
                                         <% } else { %>
                                             <tr>
-                                                <td colspan="4">No hay clientes registrados</td>
+                                                <td colspan="5">No hay clientes registrados</td>
                                             </tr>
                                             <% } %>
                         </tbody>
                     </table>
-
                 </div>
                 <div class="col-md-4">
                     <form action="/cltsave" method="POST">
@@ -84,6 +86,84 @@
         </div>
 
         <%- include('partials/footer.ejs') %>
+
+            <script>
+                $(document).ready(function () {
+                    // Delegar el evento de clic al botón de editar
+                    $(document).on("click", ".editar-btn", function () {
+                        var id = $(this).data("id");
+                        var tr = $("#cliente-" + id);
+                        var nombre = tr.find(".nombre").text().trim();   // Usar .trim() para eliminar espacios innecesarios
+                        var correo = tr.find(".correo").text().trim();   // Igual para correo
+                        var direccion = tr.find(".direccion").text().trim();   // Igual para dirección
+
+
+                        // Reemplazar los textos por campos de texto
+                        tr.find(".nombre").html(`<input type="text" class="form-control" value="${nombre}">`);
+                        tr.find(".correo").html(`<input type="email" class="form-control" value="${correo}">`);
+                        tr.find(".direccion").html(`<input type="text" class="form-control" value="${direccion}">`);
+
+                        // Reemplazar el botón de editar con los botones de guardar y cancelar
+                        $(this).replaceWith(`
+                            <button class="btn btn-outline-success guardar-btn" data-id="${id}">Guardar</button>
+                            <button class="btn btn-outline-secondary cancelar-btn" data-id="${id}">Cancelar</button>`);
+                    });
+
+                    // Delegar el evento de clic al botón de cancelar
+                    $(document).on("click", ".cancelar-btn", function () {
+                        var id = $(this).data("id");
+                        var tr = $("#cliente-" + id);
+
+                        // Restaurar los valores originales
+                        tr.find(".nombre").text(tr.find(".nombre input").val());
+                        tr.find(".correo").text(tr.find(".correo input").val());
+                        tr.find(".direccion").text(tr.find(".direccion input").val());
+
+                        // Reemplazar los botones
+                        $(this).replaceWith(`<button class="btn btn-outline-warning editar-btn" data-id="${id}">Editar</button>`);
+                        tr.find(".guardar-btn").remove();
+                    });
+
+                    // Delegar el evento de clic al botón de guardar
+                    $(document).on("click", ".guardar-btn", function () {
+                        var id = $(this).data("id");
+                        var tr = $("#cliente-" + id);
+                        var nombre = tr.find(".nombre input").val().trim();  // Limpiar espacios antes y después
+                        var correo = tr.find(".correo input").val().trim();  // Limpiar espacios antes y después
+                        var direccion = tr.find(".direccion input").val().trim();  // Limpiar espacios antes y después
+
+                        // Enviar los datos al servidor para guardar en la base de datos
+                        $.ajax({
+                            url: "/cltedit/" + id,  // Ruta de actualización del cliente
+                            method: "POST",
+                            data: {
+                                nombre: nombre,
+                                correo: correo,
+                                direccion: direccion
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    // Actualizar la fila con los nuevos datos
+                                    tr.find(".nombre").text(nombre);
+                                    tr.find(".correo").text(correo);
+                                    tr.find(".direccion").text(direccion);
+
+                                    // Reemplazar los botones
+                                    $(this).replaceWith(`<button class="btn btn-outline-warning editar-btn" data-id="${id}">Editar</button>`);
+                                    tr.find(".cancelar-btn").remove();
+                                } else {
+                                    alert('Hubo un error al guardar los cambios.');
+                                }
+                            },
+                            error: function () {
+                                alert('Hubo un error en la conexión.');
+                            }
+                        });
+                    });
+
+                });
+
+            </script>
 </body>
 
 </html>
