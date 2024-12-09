@@ -19,6 +19,7 @@
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Email</th>
+                                <th>Direccion</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -36,8 +37,12 @@
                                             <%= cliente.correo %>
                                         </td>
                                         <td>
+                                            <%= cliente.direccion %>
+                                        </td>
+                                        <td>
                                             <button href="/cltedit<%= cliente.id %>" type="button" class="btn btn-outline-warning">Editar</button>
-                                            <button href="/cltdelete<%= cliente.id %>" type="button" class="btn btn-outline-danger">Eliminar</button>
+                                            <a href="/cltdelete/<%= cliente.id_cliente %>" class="btn btn-outline-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?')">Eliminar</a>
+
                                         </td>
                                     </tr>
                                     <% }); %>
@@ -76,7 +81,6 @@
                     </form>
                 </div>
             </div>
-        </div>
         </div>
 
         <%- include('partials/footer.ejs') %>

@@ -32,7 +32,18 @@ controller.save = (req, res) => {
 };
 
 controller.delete = (req, res) => {
-    res.send('eliminamos una cliente');
+    const { id } = req.params; // Obtener el ID del cliente desde los parámetros de la URL
+    req.getConnection((err, conn) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        conn.query('DELETE FROM cliente WHERE id_cliente = ?', [id], (err, result) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            res.redirect('/cltsview'); // Redirigir al listado después de eliminar
+        });
+    });
 };
 
 module.exports = controller;
