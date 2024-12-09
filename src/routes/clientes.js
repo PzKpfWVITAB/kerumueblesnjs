@@ -8,8 +8,8 @@ router.get('/cltdelete/:id', clientesController.delete); // eliminar clientes co
 router.post('/cltsave', clientesController.save); // guardar clientes con post
 router.post('/cltedit/:id', clientesController.update);  // Ruta para actualizar un cliente
 
-router.get('/' , (req,res) => {
-    res.send('Directorio Home');
-});
+// router.get('/' , (req,res) => {
+//     res.send('Directorio Home');
+// });
 
 module.exports = router;

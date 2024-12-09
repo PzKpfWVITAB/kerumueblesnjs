@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorías</title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/darkly/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Para manejar eventos -->
+</head>
+
+<body>
+    <%- include('partials/header.ejs') %>
+        <div class="container" style="margin-top: 20px;">
+            <div class="row">
+                <div class="col-md-8">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (data.length> 0) { %>
+                                <% data.forEach(categoria=> { %>
+                                    <tr id="categoria-<%= categoria.id_categoria %>">
+                                        <td>
+                                            <%= categoria.id_categoria %>
+                                        </td>
+                                        <td class="nombre">
+                                            <%= categoria.nombre %>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline-warning editar-btn"
+                                                data-id="<%= categoria.id_categoria %>">Editar</button>
+                                            <a href="/catdelete/<%= categoria.id_categoria %>"
+                                                class="btn btn-outline-danger"
+                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este categoria?')">Eliminar</a>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="5">No hay categorias registrados</td>
+                                            </tr>
+                                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-4">
+                    <form action="/catsave" method="POST">
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre">
+                        </div>
+                        <div class="form-group" style="margin-top: 20px;">
+                            <button type="submit" class="btn btn-success">Agregar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <%- include('partials/footer.ejs') %>
+
+            <script>
+                $(document).ready(function () {
+                    // Delegar el evento de clic al botón de editar
+                    $(document).on("click", ".editar-btn", function () {
+                        var id = $(this).data("id");
+                        var tr = $("#categoria-" + id);
+                        var nombre = tr.find(".nombre").text().trim();   // Usar .trim() para eliminar espacios innecesarios
+
+
+                        // Reemplazar los textos por campos de texto
+                        tr.find(".nombre").html(`<input type="text" class="form-control" value="${nombre}">`);
+
+                        // Reemplazar el botón de editar con los botones de guardar y cancelar
+                        $(this).replaceWith(`
+                            <button class="btn btn-outline-success guardar-btn" data-id="${id}">Guardar</button>
+                            <button class="btn btn-outline-secondary cancelar-btn" data-id="${id}">Cancelar</button>`);
+                    });
+
+                    // Delegar el evento de clic al botón de cancelar
+                    $(document).on("click", ".cancelar-btn", function () {
+                        var id = $(this).data("id");
+                        var tr = $("#categoria-" + id);
+
+                        // Restaurar los valores originales
+                        tr.find(".nombre").text(tr.find(".nombre input").val());
+
+                        // Reemplazar los botones
+                        $(this).replaceWith(`<button class="btn btn-outline-warning editar-btn" data-id="${id}">Editar</button>`);
+                        tr.find(".guardar-btn").remove();
+                    });
+
+                    // Delegar el evento de clic al botón de guardar
+                    $(document).on("click", ".guardar-btn", function () {
+                        var id = $(this).data("id");
+                        var tr = $("#categoria-" + id);
+                        var nombre = tr.find(".nombre input").val().trim();
+                        var guardarBtn = $(this);
+
+                        // Enviar los datos al servidor para guardar en la base de datos
+                        $.ajax({
+                            url: "/catedit/" + id,  // Ruta de actualización del categoria
+                            method: "POST",
+                            data: {
+                                nombre: nombre,
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    // Actualizar la fila con los nuevos datos
+                                    tr.find(".nombre").text(nombre);
+
+                                    // Reemplazar los botones
+                                    guardarBtn.replaceWith(`<button class="btn btn-outline-warning editar-btn" data-id="${id}">Editar</button>`);
+                                    tr.find(".cancelar-btn").remove();
+                                } else {
+                                    alert('Hubo un error al guardar los cambios.');
+                                }
+                            },
+                            error: function () {
+                                alert('Hubo un error en la conexión.');
+                            }
+                        });
+                    });
+
+
+                });
+
+            </script>
+</body>
+
+</html>

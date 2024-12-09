@@ -20,7 +20,7 @@ USE `kerumueblesnjs` ;
 DROP TABLE IF EXISTS `kerumueblesnjs`.`CATEGORIA` ;
 
 CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`CATEGORIA` (
-  `id_categoria` INT NOT NULL,
+  `id_categoria` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(30) NULL,
   PRIMARY KEY (`id_categoria`))
 ENGINE = InnoDB;
@@ -32,13 +32,13 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `kerumueblesnjs`.`ARTICULO` ;
 
 CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`ARTICULO` (
-  `id_articulo` INT NOT NULL,
+  `id_articulo` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NULL,
   `descripción` VARCHAR(45) NULL,
   `tipo` VARCHAR(20) NULL,
   `precio` FLOAT NULL,
-  `CATEGORIA_id_categoria` INT NOT NULL,
   `existencia` INT NULL,
+  `CATEGORIA_id_categoria` INT NOT NULL,
   PRIMARY KEY (`id_articulo`, `CATEGORIA_id_categoria`),
   INDEX `fk_ARTICULO_CATEGORIA1_idx` (`CATEGORIA_id_categoria` ASC) VISIBLE,
   CONSTRAINT `fk_ARTICULO_CATEGORIA1`
@@ -70,7 +70,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `kerumueblesnjs`.`PEDIDO` ;
 
 CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`PEDIDO` (
-  `id_pedido` INT NOT NULL,
+  `id_pedido` INT NOT NULL AUTO_INCREMENT,
   `estatus` VARCHAR(45) NOT NULL,
   `fecha` DATETIME NULL,
   `fecha_entrega` DATE NULL,
@@ -138,7 +138,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `kerumueblesnjs`.`CARRITO` ;
 
 CREATE TABLE IF NOT EXISTS `kerumueblesnjs`.`CARRITO` (
-  `id_carrito` INT NOT NULL,
+  `id_carrito` INT NOT NULL AUTO_INCREMENT,
   `CLIENTE_id_cliente` INT NOT NULL,
   PRIMARY KEY (`id_carrito`),
   INDEX `fk_CARRITO_CLIENTE1_idx` (`CLIENTE_id_cliente` ASC) VISIBLE,
