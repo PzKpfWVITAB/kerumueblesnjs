@@ -128,9 +128,10 @@
                     $(document).on("click", ".guardar-btn", function () {
                         var id = $(this).data("id");
                         var tr = $("#cliente-" + id);
-                        var nombre = tr.find(".nombre input").val().trim();  // Limpiar espacios antes y después
-                        var correo = tr.find(".correo input").val().trim();  // Limpiar espacios antes y después
-                        var direccion = tr.find(".direccion input").val().trim();  // Limpiar espacios antes y después
+                        var nombre = tr.find(".nombre input").val().trim();
+                        var correo = tr.find(".correo input").val().trim();
+                        var direccion = tr.find(".direccion input").val().trim();
+                        var guardarBtn = $(this);
 
                         // Enviar los datos al servidor para guardar en la base de datos
                         $.ajax({
@@ -149,7 +150,7 @@
                                     tr.find(".direccion").text(direccion);
 
                                     // Reemplazar los botones
-                                    $(this).replaceWith(`<button class="btn btn-outline-warning editar-btn" data-id="${id}">Editar</button>`);
+                                    guardarBtn.replaceWith(`<button class="btn btn-outline-warning editar-btn" data-id="${id}">Editar</button>`);
                                     tr.find(".cancelar-btn").remove();
                                 } else {
                                     alert('Hubo un error al guardar los cambios.');
@@ -160,6 +161,7 @@
                             }
                         });
                     });
+
 
                 });
 

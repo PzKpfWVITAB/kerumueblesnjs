@@ -46,4 +46,34 @@ controller.delete = (req, res) => {
     });
 };
 
+controller.update = (req, res) => {
+    const { id } = req.params;  // Obtener el ID del cliente desde los parámetros de la URL
+    const { nombre, correo, direccion } = req.body;  // Obtener los datos enviados desde el cliente
+
+    // Verificar que los datos estén presentes
+    if (!nombre || !correo || !direccion) {
+        return res.status(400).json({ success: false, message: 'Faltan datos.' });
+    }
+
+    // Realizar la actualización en la base de datos
+    const query = 'UPDATE cliente SET nombre = ?, correo = ?, direccion = ? WHERE id_cliente = ?';
+    req.getConnection((err, conn) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        conn.query(query, [nombre, correo, direccion, id], (err, result) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            if (result.affectedRows > 0) {
+                return res.json({ success: true });  // Responder con éxito
+            } else {
+                return res.status(404).json({ success: false, message: 'Cliente no encontrado.' });
+            }
+        });
+    });
+};
+
+
 module.exports = controller;
