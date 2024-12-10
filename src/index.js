@@ -12,6 +12,7 @@ const appRoutes = require('./routes/app.js');
 const clientesRoutes = require('./routes/clientes.js');
 const categoriasRoutes = require('./routes/categorias.js');
 const articulosRoutes = require('./routes/articulos.js');
+const pedidosRoutes = require('./routes/pedidos.js');
 
 // Definición de listas
 const categorias = [];
@@ -37,6 +38,7 @@ app.use('/', appRoutes);
 app.use('/', clientesRoutes);
 app.use('/', categoriasRoutes);
 app.use('/', articulosRoutes);
+app.use('/', pedidosRoutes);
 
 
 //static files
