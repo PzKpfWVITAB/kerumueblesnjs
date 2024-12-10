@@ -31,7 +31,7 @@ controller.save = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.redirect('/catsview'); // Redirigir al listado después de guardar
+            res.redirect('/artsview'); // Redirigir al listado después de guardar
         });
     });
 };
@@ -46,7 +46,7 @@ controller.delete = (req, res) => {
             if (err) {
                 return res.status(500).send(err);
             }
-            res.redirect('/catsview'); // Redirigir al listado después de eliminar
+            res.redirect('/artsview'); // Redirigir al listado después de eliminar
         });
     });
 };
